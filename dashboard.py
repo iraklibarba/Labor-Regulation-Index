@@ -4,7 +4,7 @@ from dash.dependencies import Input, Output
 import plotly.express as px
 
 # Load data
-file_path = '/content/LRI_short.dta'
+file_path = 'https://github.com/iraklibarba/Labor-Regulation-Index/blob/main/LRI_short.dta'
 data = pd.read_stata(file_path)
 
 # Initialize the Dash app
