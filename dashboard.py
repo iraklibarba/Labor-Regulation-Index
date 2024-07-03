@@ -3,7 +3,7 @@ from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
 import plotly.express as px
 
-# Load data
+# Load data from GitHub raw URL
 mydataset = "https://raw.githubusercontent.com/iraklibarba/Labor-Regulation-Index/main/LRI_short.dta"
 data = pd.read_stata(mydataset)
 
@@ -12,7 +12,7 @@ app = Dash(__name__)
 server=app.server
 
 # List of indicators for the dropdown
-indicators = ['lri', 'employment_forms', 'working_time', 'dismissal',
+indicators = ['lri', 'employment_forms', 'working_time', 'dismissal', 
               'employee_representation', 'industrial_action']
 
 # List of years for the dropdown
@@ -21,7 +21,7 @@ years = data['year'].unique()
 # Layout of the app
 app.layout = html.Div([
     html.H1("Interactive Dashboard"),
-    html.P("This dashboard allows you to explore various labor market indicators across different countries and years. Select an indicator and year to see the data visualized on the map.This dashboard allows you to explore various labor market indicators across different countries and years. Select an indicator and year to see the data visualized on the map."),
+    html.P("This dashboard allows you to explore various labor market indicators across different countries and years. Select an indicator and year to see the data visualized on the map."),
     html.Div([
         dcc.Dropdown(
             id='indicator-dropdown',
@@ -32,11 +32,11 @@ app.layout = html.Div([
         dcc.Dropdown(
             id='year-dropdown',
             options=[{'label': str(year), 'value': year} for year in years],
-            value=years[0],  # Default value
+            value=2022,  # Default value
             style={'width': '48%', 'display': 'inline-block', 'verticalAlign': 'middle'}
         ),
     ], style={'textAlign': 'center'}),
-    dcc.Graph(id='choropleth-map'),
+    dcc.Graph(id='choropleth-map', style={'height': '80vh'}),  # Increase map size
     html.Button("Download Entire Dataset", id="btn-download-entire", style={'margin-top': '10px'}),
     dcc.Download(id="download-entire-dataframe-csv"),
     dcc.Dropdown(
@@ -75,7 +75,7 @@ app.layout = html.Div([
 def update_graphs(selected_indicator, selected_year, selected_country):
     filtered_data = data[data['country'] == selected_country]
     year_data = data[data['year'] == selected_year]
-
+    
     # Create time series graphs for each indicator
     lri_fig = px.line(filtered_data, x='year', y='lri', title='LRI Over Time')
     employment_forms_fig = px.line(filtered_data, x='year', y='employment_forms', title='Employment Forms Over Time')
@@ -83,7 +83,7 @@ def update_graphs(selected_indicator, selected_year, selected_country):
     dismissal_fig = px.line(filtered_data, x='year', y='dismissal', title='Dismissal Over Time')
     employee_representation_fig = px.line(filtered_data, x='year', y='employee_representation', title='Employee Representation Over Time')
     industrial_action_fig = px.line(filtered_data, x='year', y='industrial_action', title='Industrial Action Over Time')
-
+    
     # Create choropleth map for the selected indicator and year
     choropleth_fig = px.choropleth(
         year_data,
@@ -101,10 +101,11 @@ def update_graphs(selected_indicator, selected_year, selected_country):
             y=-0.25,
             xanchor='center',
             x=0.5,
-            title=None
+            title=None,
+            len=0.3,  # Make the legend smaller
         )
     )
-
+    
     return (choropleth_fig, lri_fig, employment_forms_fig, working_time_fig, dismissal_fig, employee_representation_fig, industrial_action_fig)
 
 @app.callback(
