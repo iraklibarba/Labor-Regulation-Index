@@ -9,6 +9,7 @@ data = pd.read_stata(file_path)
 
 # Initialize the Dash app
 app = Dash(__name__)
+server=app.server
 
 # List of indicators for the dropdown
 indicators = ['lri', 'employment_forms', 'working_time', 'dismissal',
