@@ -11,9 +11,18 @@ data = pd.read_stata(mydataset)
 app = Dash(__name__)
 server=app.server
 
+# Dictionary to map internal indicator names to user-friendly names
+indicator_names = {
+    'lri': 'Labor Regulation Index',
+    'employment_forms': 'Different Forms of Employment',
+    'working_time': 'Regulation of Working Time',
+    'dismissal': 'Regulation of Dismissal',
+    'employee_representation': 'Employee Representation',
+    'industrial_action': 'Industrial Action'
+}
+
 # List of indicators for the dropdown
-indicators = ['lri', 'employment_forms', 'working_time', 'dismissal', 
-              'employee_representation', 'industrial_action']
+indicators = list(indicator_names.keys())
 
 # List of years for the dropdown
 years = data['year'].unique()
@@ -25,7 +34,7 @@ app.layout = html.Div([
     html.Div([
         dcc.Dropdown(
             id='indicator-dropdown',
-            options=[{'label': indicator.replace('_', ' ').title(), 'value': indicator} for indicator in indicators],
+            options=[{'label': name, 'value': key} for key, name in indicator_names.items()],
             value='lri',  # Default value
             style={'width': '48%', 'display': 'inline-block', 'verticalAlign': 'middle', 'margin-right': '1%'}
         ),
@@ -77,29 +86,29 @@ def update_graphs(selected_indicator, selected_year, selected_country):
     year_data = data[data['year'] == selected_year]
     
     # Create time series graphs for each indicator
-    lri_fig = px.line(filtered_data, x='year', y='lri', title='Labour Regulation Index Over Time')
+    lri_fig = px.line(filtered_data, x='year', y='lri', title='Labor Regulation Index Over Time')
     lri_fig.update_xaxes(title_text="")
-    lri_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
+    lri_fig.update_yaxes(title_text="", range=[0, 1])
     
     employment_forms_fig = px.line(filtered_data, x='year', y='employment_forms', title='Different Forms of Employment Over Time')
     employment_forms_fig.update_xaxes(title_text="")
-    employment_forms_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
+    employment_forms_fig.update_yaxes(title_text="", range=[0, 1])
     
     working_time_fig = px.line(filtered_data, x='year', y='working_time', title='Regulation of Working Time Over Time')
     working_time_fig.update_xaxes(title_text="")
-    working_time_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
+    working_time_fig.update_yaxes(title_text="", range=[0, 1])
     
     dismissal_fig = px.line(filtered_data, x='year', y='dismissal', title='Regulation of Dismissal Over Time')
     dismissal_fig.update_xaxes(title_text="")
-    dismissal_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
+    dismissal_fig.update_yaxes(title_text="", range=[0, 1])
     
     employee_representation_fig = px.line(filtered_data, x='year', y='employee_representation', title='Employee Representation Over Time')
     employee_representation_fig.update_xaxes(title_text="")
-    employee_representation_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
+    employee_representation_fig.update_yaxes(title_text="", range=[0, 1])
     
     industrial_action_fig = px.line(filtered_data, x='year', y='industrial_action', title='Industrial Action Over Time')
     industrial_action_fig.update_xaxes(title_text="")
-    industrial_action_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
+    industrial_action_fig.update_yaxes(title_text="", range=[0, 1])
     
     # Create choropleth map for the selected indicator and year
     choropleth_fig = px.choropleth(
@@ -108,7 +117,7 @@ def update_graphs(selected_indicator, selected_year, selected_country):
         locationmode="country names",
         color=selected_indicator,
         hover_name="country",
-        title=f'{selected_indicator.replace("_", " ").title()} in {selected_year}'
+        title=f'{indicator_names[selected_indicator]} in {selected_year}'
     )
 
     choropleth_fig.update_layout(
@@ -119,7 +128,7 @@ def update_graphs(selected_indicator, selected_year, selected_country):
             xanchor='center',
             x=0.5,
             title=None,
-            len=0.4,  # Make the legend smaller
+            len=0.3,  # Make the legend smaller
         )
     )
     
@@ -128,6 +137,7 @@ def update_graphs(selected_indicator, selected_year, selected_country):
 @app.callback(
     Output('download-dataframe-csv', 'data'),
     [Input('btn-download', 'n_clicks')],
+    [Input('country-dropdown', 'value')],
     prevent_initial_call=True
 )
 def download_filtered_data(n_clicks, selected_country):
