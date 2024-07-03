@@ -21,7 +21,7 @@ years = data['year'].unique()
 # Layout of the app
 app.layout = html.Div([
     html.H1("Interactive Dashboard"),
-    html.P("This dashboard allows you to explore various labor market indicators across different countries and years. Select an indicator and year to see the data visualized on the map."),
+    html.P("This dashboard allows you to explore various labor market indicators across different countries and years. Select an indicator and year to see the data visualized on the map.This dashboard allows you to explore various labor market indicators across different countries and years. Select an indicator and year to see the data visualized on the map."),
     html.Div([
         dcc.Dropdown(
             id='indicator-dropdown',
