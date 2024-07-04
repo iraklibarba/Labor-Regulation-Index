@@ -88,27 +88,27 @@ def update_graphs(selected_indicator, selected_year, selected_country):
     # Create time series graphs for each indicator
     lri_fig = px.line(filtered_data, x='year', y='lri', title='Labor Regulation Index Over Time')
     lri_fig.update_xaxes(title_text="")
-    lri_fig.update_yaxes(title_text="", range=[0, 1])
+    lri_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
     
     employment_forms_fig = px.line(filtered_data, x='year', y='employment_forms', title='Different Forms of Employment Over Time')
     employment_forms_fig.update_xaxes(title_text="")
-    employment_forms_fig.update_yaxes(title_text="", range=[0, 1])
+    employment_forms_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
     
     working_time_fig = px.line(filtered_data, x='year', y='working_time', title='Regulation of Working Time Over Time')
     working_time_fig.update_xaxes(title_text="")
-    working_time_fig.update_yaxes(title_text="", range=[0, 1])
+    working_time_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
     
     dismissal_fig = px.line(filtered_data, x='year', y='dismissal', title='Regulation of Dismissal Over Time')
     dismissal_fig.update_xaxes(title_text="")
-    dismissal_fig.update_yaxes(title_text="", range=[0, 1])
+    dismissal_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
     
     employee_representation_fig = px.line(filtered_data, x='year', y='employee_representation', title='Employee Representation Over Time')
     employee_representation_fig.update_xaxes(title_text="")
-    employee_representation_fig.update_yaxes(title_text="", range=[0, 1])
+    employee_representation_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
     
     industrial_action_fig = px.line(filtered_data, x='year', y='industrial_action', title='Industrial Action Over Time')
     industrial_action_fig.update_xaxes(title_text="")
-    industrial_action_fig.update_yaxes(title_text="", range=[0, 1])
+    industrial_action_fig.update_yaxes(title_text="", range=[-0.05, 1.05])
     
     # Create choropleth map for the selected indicator and year
     choropleth_fig = px.choropleth(
